@@ -1,0 +1,42 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - heading "Catan Timer" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Board Game Turn Timer
+  - generic [ref=e7]:
+    - heading "Players" [level=2] [ref=e8]
+    - generic [ref=e9]:
+      - button "3" [ref=e10] [cursor=pointer]
+      - button "4" [ref=e11] [cursor=pointer]
+      - button "5" [ref=e12] [cursor=pointer]
+      - button "6" [ref=e13] [cursor=pointer]
+  - generic [ref=e14]:
+    - heading "Turn Duration" [level=2] [ref=e15]
+    - generic [ref=e16]:
+      - button "Casual 5:00" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: Casual
+        - generic [ref=e19]: 5:00
+      - button "Normal 3:00" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: Normal
+        - generic [ref=e22]: 3:00
+      - button "Competitive 1:30" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: Competitive
+        - generic [ref=e25]: 1:30
+      - button "Custom ..." [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: Custom
+        - generic [ref=e28]: ...
+  - generic [ref=e29]:
+    - heading "Player Names" [level=2] [ref=e30]
+    - list [ref=e31]:
+      - listitem [ref=e32]:
+        - button "Change color for player 1" [ref=e33] [cursor=pointer]
+        - textbox "Player 1" [ref=e34]
+      - listitem [ref=e35]:
+        - button "Change color for player 2" [ref=e36] [cursor=pointer]
+        - textbox "Player 2" [ref=e37]
+      - listitem [ref=e38]:
+        - button "Change color for player 3" [ref=e39] [cursor=pointer]
+        - textbox "Player 3" [ref=e40]
+      - listitem [ref=e41]:
+        - button "Change color for player 4" [ref=e42] [cursor=pointer]
+        - textbox "Player 4" [ref=e43]
+  - button "Start Game" [ref=e45] [cursor=pointer]

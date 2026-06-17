@@ -1,0 +1,57 @@
+[     154ms] [WARNING] %c[svelte] state_proxy_equality_mismatch
+%cReactive `$state(...)` proxies and the values they proxy have different identities. Because of this, comparisons with `===` will produce unexpected results
+https://svelte.dev/e/state_proxy_equality_mismatch font-weight: bold font-weight: normal @ http://localhost:5173/node_modules/@sveltejs/kit/src/runtime/client/client.js?v=757846da:3389
+[  119587ms] ReferenceError: selectedPreset is not defined
+
+	in <unknown>
+	in +page.svelte
+	in +layout.svelte
+	in root.svelte
+	in undefined
+
+    at http://localhost:5173/src/routes/+page.svelte?t=1781658391401:151:30
+    at http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4479:4
+    at update_reaction (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4884:16)
+    at update_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4984:18)
+    at create_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4308:4)
+    at http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4478:3
+    at flatten (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:2090:3)
+    at Module.template_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4477:2)
+    at http://localhost:5173/src/routes/+page.svelte?t=1781658391401:149:6
+    at http://localhost:5173/node_modules/.vite/deps/index-client-B_dShEJm.js?v=757846da:1130:4
+[  127686ms] ReferenceError: selectedPreset is not defined
+
+	in <unknown>
+	in +page.svelte
+	in +layout.svelte
+	in root.svelte
+	in undefined
+
+    at http://localhost:5173/src/routes/+page.svelte?t=1781658399520:155:30
+    at http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4479:4
+    at update_reaction (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4884:16)
+    at update_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4984:18)
+    at create_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4308:4)
+    at http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4478:3
+    at flatten (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:2090:3)
+    at Module.template_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4477:2)
+    at http://localhost:5173/src/routes/+page.svelte?t=1781658399520:153:6
+    at http://localhost:5173/node_modules/.vite/deps/index-client-B_dShEJm.js?v=757846da:1130:4
+[  139331ms] ReferenceError: selectedPreset is not defined
+
+	in <unknown>
+	in +page.svelte
+	in +layout.svelte
+	in root.svelte
+	in undefined
+
+    at http://localhost:5173/src/routes/+page.svelte?t=1781658411166:155:30
+    at http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4479:4
+    at update_reaction (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4884:16)
+    at update_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4984:18)
+    at create_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4308:4)
+    at http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4478:3
+    at flatten (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:2090:3)
+    at Module.template_effect (http://localhost:5173/node_modules/.vite/deps/runtime-BpkzEDpg.js?v=757846da:4477:2)
+    at http://localhost:5173/src/routes/+page.svelte?t=1781658411166:153:6
+    at http://localhost:5173/node_modules/.vite/deps/index-client-B_dShEJm.js?v=757846da:1130:4
