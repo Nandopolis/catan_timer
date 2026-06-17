@@ -70,6 +70,10 @@
 	function playerColorVar(color: PlayerColor): string {
 		return `var(--color-player-${color})`;
 	}
+
+	function endTurnTextColor(color: PlayerColor): string {
+		return color === 'white' || color === 'yellow' ? '#1A1A2E' : '#FFFFFF';
+	}
 </script>
 
 <main class="game">
@@ -115,6 +119,7 @@
 			onclick={handleEndTurn}
 			disabled={endTurnDisabled}
 			style:background-color={currentPlayer ? COLOR_VALUES[currentPlayer.color] : 'var(--color-accent)'}
+			style:color={currentPlayer ? endTurnTextColor(currentPlayer.color) : '#1A1A2E'}
 		>
 			End Turn
 		</button>
@@ -162,8 +167,8 @@
 
 	.btn-icon {
 		color: var(--color-muted);
-		min-height: 40px;
-		min-width: 40px;
+		min-height: 48px;
+		min-width: 48px;
 		padding: var(--space-xs);
 		border-radius: var(--radius-md);
 	}
@@ -241,10 +246,19 @@
 		min-width: 16px;
 		padding: 0;
 		cursor: default;
+		border: 1px solid transparent;
+	}
+
+	.player-chip .color-dot-white {
+		border-color: var(--color-muted);
 	}
 
 	.player-chip .color-dot:hover {
 		border-color: transparent;
+	}
+
+	.player-chip .color-dot-white:hover {
+		border-color: var(--color-muted);
 	}
 
 	.player-chip .color-dot:active {
@@ -279,7 +293,6 @@
 		min-height: 56px;
 		font-size: var(--font-size-body);
 		font-weight: 700;
-		color: #FFFFFF;
 		border-radius: var(--radius-lg);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
@@ -329,6 +342,25 @@
 	.btn-new-game:hover {
 		background-color: var(--color-surface-raised);
 		color: var(--color-text);
+	}
+
+	/* Small screens */
+	@media (max-width: 375px) {
+		.game {
+			padding: var(--space-sm);
+		}
+
+		.player-chip-name {
+			font-size: var(--font-size-xs);
+		}
+
+		.controls-row {
+			flex-wrap: wrap;
+		}
+
+		.controls-row > * {
+			flex: 1 1 calc(50% - var(--space-sm) / 2);
+		}
 	}
 
 	/* Landscape layout */

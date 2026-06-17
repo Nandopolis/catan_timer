@@ -246,7 +246,7 @@
 	.btn-select.active {
 		background-color: var(--color-accent);
 		border-color: var(--color-accent);
-		color: #000;
+		color: #1A1A2E;
 	}
 
 	/* Preset button inner labels */
@@ -264,7 +264,7 @@
 	}
 
 	.btn-select.active .preset-time {
-		color: rgba(0, 0, 0, 0.6);
+		color: rgba(26, 26, 46, 0.6);
 	}
 
 	/* Custom duration */
@@ -330,6 +330,13 @@
 		min-height: 24px;
 		min-width: 24px;
 		padding: 0;
+		position: relative;
+	}
+
+	.color-dot::after {
+		content: '';
+		position: absolute;
+		inset: -12px;
 	}
 
 	.color-dot:active {
@@ -360,7 +367,7 @@
 
 	.btn-start {
 		background-color: var(--color-accent);
-		color: #000;
+		color: #1A1A2E;
 		font-size: var(--font-size-body);
 		font-weight: 700;
 		min-height: 48px;
@@ -371,5 +378,24 @@
 
 	.btn-start:hover {
 		background-color: var(--color-accent-hover);
+	}
+
+	/* Small screens */
+	@media (max-width: 375px) {
+		.setup {
+			padding: var(--space-md) var(--space-sm) var(--space-xl);
+		}
+
+		.btn-group {
+			flex-wrap: wrap;
+		}
+
+		.btn-select {
+			flex: 1 1 calc(33% - var(--space-sm) / 2);
+		}
+
+		.custom-duration input {
+			font-size: 1.25rem;
+		}
 	}
 </style>
