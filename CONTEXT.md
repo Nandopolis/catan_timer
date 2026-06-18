@@ -6,7 +6,11 @@
 
 **Soft Warning**: An alarm and visual indication that a player's time has expired, without forcibly ending their turn. Social pressure, not rule enforcement.
 
-**Overtime**: The period after a turn timer expires, displayed as a count-up in red (e.g., "+0:45") showing how long the player has exceeded their allotted time.
+**Overtime**: The duration past the turn timer, displayed as a count-up in red (e.g., "+0:45"). An amount of time, not a count.
+_Avoid_: Over Time (which is a different concept — see Turns Over).
+
+**Turns Over**: The count of how many of a player's turns exceeded the timer. A number, not a duration.
+_Avoid_: Over Time (ambiguous with Overtime), Late Turns.
 
 **Round**: One complete cycle through all players. The round counter increments when play returns to the first player.
 
