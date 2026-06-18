@@ -38,7 +38,9 @@ export class AlarmManager {
 
     const now = this.audioContext.currentTime;
     playTone(now);
-    playTone(now + 0.3); // Second beep after 300ms gap (100ms gap + 200ms tone)
+    playTone(now + 0.3);
+    playTone(now + 0.6);
+    playTone(now + 0.9);
   }
 
   private startKeepAlive(): void {
