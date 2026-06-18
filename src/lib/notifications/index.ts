@@ -8,10 +8,12 @@ export async function requestNotificationPermission(): Promise<void> {
 	}
 }
 
+import * as m from '$lib/paraglide/messages.js';
+
 export function notifyTimerExpired(playerName: string): void {
 	try {
 		if ('Notification' in window && Notification.permission === 'granted') {
-			new Notification(`⏰ ${playerName}'s turn time has expired!`, {
+			new Notification(m['notifications.turnExpired']({ playerName }), {
 				icon: '/favicon.svg'
 			});
 		}

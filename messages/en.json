@@ -49,6 +49,7 @@
 	"stats.unknown": "Unknown",
 	"stats.confirmNewGameTitle": "New Game",
 	"stats.confirmNewGame": "Start new game? Current game will be lost.",
+	"stats.newGame": "New Game",
 
 	"notifications.turnExpired": "\u23F0 {playerName}'s turn time has expired!",
 

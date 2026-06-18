@@ -5,6 +5,7 @@
 	import { COLOR_VALUES } from '$lib/db/schema';
 	import type { PlayerConfig, PlayerColor } from '$lib/db/schema';
 	import * as m from '$lib/paraglide/messages.js';
+	import { getLocale, setLocale } from '$lib/i18n';
 
 	const PLAYER_COLORS: PlayerColor[] = ['red', 'blue', 'white', 'green', 'brown', 'yellow'];
 
@@ -74,6 +75,23 @@
 		<h1 class="setup-title">{m['setup.title']()}</h1>
 		<p class="setup-subtitle">{m['setup.subtitle']()}</p>
 	</header>
+
+	<div class="language-switcher">
+		<button
+			class:active={getLocale() === 'en'}
+			onclick={() => setLocale('en')}
+			type="button"
+		>
+			EN
+		</button>
+		<button
+			class:active={getLocale() === 'es'}
+			onclick={() => setLocale('es')}
+			type="button"
+		>
+			ES
+		</button>
+	</div>
 
 	<section class="setup-section">
 		<h2 class="section-label">{m['setup.players']()}</h2>
@@ -202,6 +220,36 @@
 		margin-top: var(--space-xs);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
+	}
+
+	/* Language switcher */
+	.language-switcher {
+		display: flex;
+		gap: 0.5rem;
+		justify-content: center;
+	}
+
+	.language-switcher button {
+		padding: 0.5rem 1rem;
+		border-radius: var(--radius-md, 8px);
+		border: 1px solid var(--color-border);
+		background-color: var(--color-surface);
+		color: var(--color-muted);
+		cursor: pointer;
+		font-weight: 500;
+		font-size: var(--font-size-small);
+		transition: all 0.2s;
+	}
+
+	.language-switcher button.active {
+		background-color: var(--color-accent);
+		color: #1A1A2E;
+		border-color: var(--color-accent);
+	}
+
+	.language-switcher button:hover:not(.active) {
+		background-color: var(--color-surface-raised);
+		color: var(--color-text);
 	}
 
 	/* Sections */

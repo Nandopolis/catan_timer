@@ -5,6 +5,8 @@
 	import { getTurnLog, getGameState, resetGame, initGameState } from '$lib/timer/state.svelte';
 	import { formatTime } from '$lib/timer/engine';
 	import { COLOR_VALUES } from '$lib/db/schema';
+	import * as m from '$lib/paraglide/messages.js';
+	import { confirmAction } from '$lib/components/modal.js';
 	import type { TurnLogEntry, PlayerColor } from '$lib/db/schema';
 
 	onMount(() => {
@@ -60,8 +62,12 @@
 		};
 	});
 
-	function handleNewGame() {
-		if (confirm('Start new game? Current game will be lost.')) {
+	async function handleNewGame() {
+		const confirmed = await confirmAction(
+			m['stats.confirmNewGameTitle'](),
+			m['stats.confirmNewGame']()
+		);
+		if (confirmed) {
 			resetGame();
 			goto(base + '/');
 		}
@@ -83,51 +89,51 @@
 
 <main class="stats container">
 	<header class="stats-header">
-		<h1>Game Stats</h1>
+		<h1>{m['stats.title']()}</h1>
 		{#if gameState && gameState.phase !== 'game_over'}
-			<button class="btn-back" onclick={handleBackToGame}>← Back to Game</button>
+			<button class="btn-back" onclick={handleBackToGame}>{m['stats.backToGame']()}</button>
 		{/if}
 	</header>
 
 	{#if !stats}
-		<p class="no-data">No turns completed yet.</p>
+		<p class="no-data">{m['stats.noTurns']()}</p>
 	{:else}
 		<!-- Game Summary -->
 		<section class="stats-section">
-			<h2>Summary</h2>
+			<h2>{m['stats.summary']()}</h2>
 			<div class="summary-grid">
 				<div class="summary-item">
 					<span class="summary-value">{formatTime(stats.totalDuration)}</span>
-					<span class="summary-label">Total Time</span>
+					<span class="summary-label">{m['stats.totalTime']()}</span>
 				</div>
 				<div class="summary-item">
 					<span class="summary-value">{stats.totalTurns}</span>
-					<span class="summary-label">Total Turns</span>
+					<span class="summary-label">{m['stats.totalTurns']()}</span>
 				</div>
 				<div class="summary-item">
-					<span class="summary-value overtime">+{formatTime(stats.totalOvertime)}</span>
-					<span class="summary-label">Total Overtime</span>
+					<span class="summary-value overtime">{m['common.overtimePrefix']()}{formatTime(stats.totalOvertime)}</span>
+					<span class="summary-label">{m['stats.totalOvertime']()}</span>
 				</div>
 				<div class="summary-item">
 					<span class="summary-value">{stats.slowestPlayer.player.name}</span>
-					<span class="summary-label">Most Overtime</span>
+					<span class="summary-label">{m['stats.mostOvertime']()}</span>
 				</div>
 			</div>
 		</section>
 
 		<!-- Per-Player Stats -->
 		<section class="stats-section">
-			<h2>Player Stats</h2>
+			<h2>{m['stats.playerStats']()}</h2>
 			<div class="stats-table-wrapper">
 				<table class="stats-table">
 					<thead>
 						<tr>
-							<th>Player</th>
-							<th>Avg Time</th>
-							<th>Overtime</th>
-							<th>Over Time</th>
-							<th>Slowest</th>
-							<th>Fastest</th>
+							<th>{m['stats.player']()}</th>
+							<th>{m['stats.avgTime']()}</th>
+							<th>{m['stats.overtime']()}</th>
+							<th>{m['stats.turnsOver']()}</th>
+							<th>{m['stats.slowest']()}</th>
+							<th>{m['stats.fastest']()}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -143,7 +149,7 @@
 								</td>
 								<td>{formatTime(ps.avgTime)}</td>
 								<td class:overtime={ps.totalOvertime > 0}
-									>+{formatTime(ps.totalOvertime)}</td
+									>{m['common.overtimePrefix']()}{formatTime(ps.totalOvertime)}</td
 								>
 								<td>{ps.turnsOverTime}</td>
 								<td>{formatTime(ps.slowest)}</td>
@@ -157,11 +163,11 @@
 
 		<!-- Turn-by-Turn Breakdown -->
 		<section class="stats-section">
-			<h2>Turn by Turn</h2>
+			<h2>{m['stats.turnByTurn']()}</h2>
 			<div class="turn-log">
 				{#each Array.from(groupByRound(turnLog).entries()) as [round, entries]}
 					<div class="round-group">
-						<h3>Round {round}</h3>
+						<h3>{m['stats.round']({ round })}</h3>
 						<ul class="round-turns">
 							{#each entries as entry}
 								{@const player = gameState?.players[entry.playerIndex]}
@@ -171,11 +177,11 @@
 										class:color-dot-white={player?.color === 'white'}
 										style="background-color: {player ? COLOR_VALUES[player.color] : '#ccc'}"
 									></span>
-									<span class="turn-player">{player?.name ?? 'Unknown'}</span>
+									<span class="turn-player">{player?.name ?? m['stats.unknown']()}</span>
 									<span class="turn-duration">{formatTime(entry.durationMs)}</span>
 									{#if entry.overtimeMs > 0}
 										<span class="turn-overtime overtime"
-											>+{formatTime(entry.overtimeMs)}</span
+											>{m['common.overtimePrefix']()}{formatTime(entry.overtimeMs)}</span
 										>
 									{/if}
 								</li>
@@ -188,7 +194,7 @@
 	{/if}
 
 	<div class="stats-actions">
-		<button class="btn-start" onclick={handleNewGame}>New Game</button>
+		<button class="btn-start" onclick={handleNewGame}>{m['stats.newGame']()}</button>
 	</div>
 </main>
 
