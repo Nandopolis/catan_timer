@@ -1,4 +1,6 @@
 <script lang="ts">
+	import * as m from '$lib/paraglide/messages.js';
+
 	let visible = $state(false);
 	let titleText = $state('');
 	let messageText = $state('');
@@ -46,8 +48,8 @@
 		<h3 id="confirm-title">{titleText}</h3>
 		<p>{messageText}</p>
 		<div class="modal-actions">
-			<button type="button" class="btn-cancel" onclick={handleCancel}>Cancel</button>
-			<button type="button" class="btn-confirm" onclick={handleConfirm}>Confirm</button>
+			<button type="button" class="btn-cancel" onclick={handleCancel}>{m['common.cancel']()}</button>
+			<button type="button" class="btn-confirm" onclick={handleConfirm}>{m['common.confirm']()}</button>
 		</div>
 	</div>
 {/if}

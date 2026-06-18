@@ -53,5 +53,7 @@
 
 	"notifications.turnExpired": "\u23F0 {playerName}'s turn time has expired!",
 
+	"common.cancel": "Cancel",
+	"common.confirm": "Confirm",
 	"common.overtimePrefix": "+"
 }

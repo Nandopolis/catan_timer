@@ -49,8 +49,11 @@
 	"stats.unknown": "Desconocido",
 	"stats.confirmNewGameTitle": "Nuevo Juego",
 	"stats.confirmNewGame": "¿Iniciar nuevo juego? El juego actual se perderá.",
+	"stats.newGame": "Nuevo Juego",
 
 	"notifications.turnExpired": "⏰ ¡El turno de {playerName} ha expirado!",
 
+	"common.cancel": "Cancelar",
+	"common.confirm": "Confirmar",
 	"common.overtimePrefix": "+"
 }
