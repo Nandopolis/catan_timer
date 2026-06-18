@@ -21,7 +21,12 @@ const config = {
 			strict: true
 		}),
 		prerender: {
-			entries: ['*']
+			entries: ['*'],
+			handleHttpError: ({ path, message }) => {
+				// vite-plugin-pwa generates manifest.webmanifest after prerender.
+				if (path === '/manifest.webmanifest') return;
+				throw new Error(message);
+			}
 		}
 	}
 };
