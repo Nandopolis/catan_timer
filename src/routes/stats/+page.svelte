@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { getTurnLog, getGameState, resetGame, initGameState } from '$lib/timer/state.svelte';
 	import { COLOR_VALUES } from '$lib/db/schema';
@@ -68,12 +69,12 @@
 	function handleNewGame() {
 		if (confirm('Start new game? Current game will be lost.')) {
 			resetGame();
-			goto('/');
+			goto(base + '/');
 		}
 	}
 
 	function handleBackToGame() {
-		goto('/game');
+		goto(base + '/game');
 	}
 
 	function groupByRound(log: TurnLogEntry[]): Map<number, TurnLogEntry[]> {

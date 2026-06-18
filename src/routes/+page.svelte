@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { startNewGame } from '$lib/timer/state.svelte';
 	import { COLOR_VALUES } from '$lib/db/schema';
 	import type { PlayerConfig, PlayerColor } from '$lib/db/schema';
@@ -59,7 +60,7 @@
 			? (customMinutes * 60 + customSeconds) * 1000
 			: getSelectedPreset().ms;
 		startNewGame(activePlayers, durationMs);
-		goto('/game');
+		goto(base + '/game');
 	}
 
 	function formatCustomDisplay(): string {

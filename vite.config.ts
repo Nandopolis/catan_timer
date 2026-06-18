@@ -18,25 +18,25 @@ export default defineConfig({
 				theme_color: '#1f2937',
 				background_color: '#0f172a',
 				display: 'standalone',
-				start_url: '/',
-				scope: '/',
+				start_url: '/catan_timer/',
+				scope: '/catan_timer/',
 				orientation: 'any',
 				categories: ['games', 'utilities'],
 				icons: [
 					{
-						src: '/favicon.svg',
+						src: '/catan_timer/favicon.svg',
 						sizes: '192x192 512x512',
 						type: 'image/svg+xml',
 						purpose: 'any maskable'
 					},
 					{
-						src: '/icon-192.png',
+						src: '/catan_timer/icon-192.png',
 						sizes: '192x192',
 						type: 'image/png',
 						purpose: 'any maskable'
 					},
 					{
-						src: '/icon-512.png',
+						src: '/catan_timer/icon-512.png',
 						sizes: '512x512',
 						type: 'image/png',
 						purpose: 'any maskable'

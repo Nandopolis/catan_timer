@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import {
 		getGameState,
@@ -56,14 +57,14 @@
 	function handleEndGame() {
 		if (confirm('End game? Current progress will be saved.')) {
 			endCurrentGame();
-			goto('/stats');
+			goto(base + '/stats');
 		}
 	}
 
 	function handleNewGame() {
 		if (confirm('Start new game? Current game will be lost.')) {
 			resetGame();
-			goto('/');
+			goto(base + '/');
 		}
 	}
 
@@ -79,7 +80,7 @@
 <main class="game">
 	<header class="game-header">
 		<span class="round-badge">Round {currentRound}</span>
-		<button class="btn-icon" onclick={() => goto('/stats')} aria-label="View stats">
+		<button class="btn-icon" onclick={() => goto(base + '/stats')} aria-label="View stats">
 			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
 				<rect x="2" y="10" width="4" height="8" rx="1" fill="currentColor" />
 				<rect x="8" y="6" width="4" height="12" rx="1" fill="currentColor" />
