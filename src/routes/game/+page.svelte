@@ -18,6 +18,8 @@
 	} from '$lib/timer/state.svelte';
 	import { COLOR_VALUES } from '$lib/db/schema';
 	import type { PlayerColor } from '$lib/db/schema';
+	import * as m from '$lib/paraglide/messages.js';
+	import { confirmAction } from '$lib/components/modal.js';
 
 	let gameState = $derived(getGameState());
 	let displayTime = $derived(getDisplayTime());
@@ -54,15 +56,23 @@
 		}, 300);
 	}
 
-	function handleEndGame() {
-		if (confirm('End game? Current progress will be saved.')) {
+	async function handleEndGame() {
+		const confirmed = await confirmAction(
+			m['game.confirmEndGameTitle'](),
+			m['game.confirmEndGame']()
+		);
+		if (confirmed) {
 			endCurrentGame();
 			goto(base + '/stats');
 		}
 	}
 
-	function handleNewGame() {
-		if (confirm('Start new game? Current game will be lost.')) {
+	async function handleNewGame() {
+		const confirmed = await confirmAction(
+			m['game.confirmNewGameTitle'](),
+			m['game.confirmNewGame']()
+		);
+		if (confirmed) {
 			resetGame();
 			goto(base + '/');
 		}
@@ -79,8 +89,8 @@
 
 <main class="game">
 	<header class="game-header">
-		<span class="round-badge">Round {currentRound}</span>
-		<button class="btn-icon" onclick={() => goto(base + '/stats')} aria-label="View stats">
+		<span class="round-badge">{m['game.round']({ round: currentRound })}</span>
+		<button class="btn-icon" onclick={() => goto(base + '/stats')} aria-label={m['game.viewStats']()}>
 			<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
 				<rect x="2" y="10" width="4" height="8" rx="1" fill="currentColor" />
 				<rect x="8" y="6" width="4" height="12" rx="1" fill="currentColor" />
@@ -96,10 +106,10 @@
 		class:paused={isPaused}
 		style:color={currentPlayer ? playerColorVar(currentPlayer.color) : 'inherit'}
 	>
-		<div class="timer-display">{isExpired ? '+' : ''}{displayTime}</div>
+		<div class="timer-display">{isExpired ? m['common.overtimePrefix']() : ''}{displayTime}</div>
 		<div class="player-name">{currentPlayer?.name ?? ''}</div>
 		{#if isPaused}
-			<div class="paused-label">PAUSED</div>
+			<div class="paused-label">{m['game.paused']()}</div>
 		{/if}
 	</section>
 
@@ -126,14 +136,14 @@
 			style:background-color={currentPlayer ? COLOR_VALUES[currentPlayer.color] : 'var(--color-accent)'}
 			style:color={currentPlayer ? endTurnTextColor(currentPlayer.color) : '#1A1A2E'}
 		>
-			End Turn
+			{m['game.endTurn']()}
 		</button>
 		<div class="controls-row">
 			<button class="btn-pause" onclick={() => (isPaused ? resume() : pause())}>
-				{isPaused ? 'Resume' : 'Pause'}
+				{isPaused ? m['game.resume']() : m['game.pause']()}
 			</button>
-			<button class="btn-end-game" onclick={handleEndGame}>End Game</button>
-			<button class="btn-new-game" onclick={handleNewGame}>New Game</button>
+			<button class="btn-end-game" onclick={handleEndGame}>{m['game.endGame']()}</button>
+			<button class="btn-new-game" onclick={handleNewGame}>{m['game.newGame']()}</button>
 		</div>
 	</section>
 
@@ -215,6 +225,7 @@
 		font-weight: 700;
 		letter-spacing: 0.15em;
 		color: var(--color-text);
+		text-transform: uppercase;
 		pointer-events: none;
 	}
 
