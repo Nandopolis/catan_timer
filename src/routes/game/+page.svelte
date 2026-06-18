@@ -92,10 +92,14 @@
 		class="timer-section"
 		class:overtime={isExpired}
 		class:overtime-pulse={pulseActive}
+		class:paused={isPaused}
 		style:color={currentPlayer ? playerColorVar(currentPlayer.color) : 'inherit'}
 	>
 		<div class="timer-display">{displayTime}</div>
 		<div class="player-name">{currentPlayer?.name ?? ''}</div>
+		{#if isPaused}
+			<div class="paused-label">PAUSED</div>
+		{/if}
 	</section>
 
 	<section class="players-section">
@@ -117,7 +121,7 @@
 		<button
 			class="btn-end-turn"
 			onclick={handleEndTurn}
-			disabled={endTurnDisabled}
+			disabled={endTurnDisabled || isPaused}
 			style:background-color={currentPlayer ? COLOR_VALUES[currentPlayer.color] : 'var(--color-accent)'}
 			style:color={currentPlayer ? endTurnTextColor(currentPlayer.color) : '#1A1A2E'}
 		>
@@ -132,11 +136,6 @@
 		</div>
 	</section>
 
-	{#if isPaused}
-		<div class="paused-overlay" role="dialog" aria-label="Game paused">
-			<h2>PAUSED</h2>
-		</div>
-	{/if}
 </main>
 
 <style>
@@ -188,6 +187,7 @@
 		gap: var(--space-sm);
 		padding: var(--space-lg) 0;
 		transition: color 0.3s ease;
+		position: relative;
 	}
 
 	.timer-section .timer-display {
@@ -197,6 +197,24 @@
 
 	.timer-section.overtime .timer-display {
 		color: var(--color-danger);
+	}
+
+	.timer-section.paused .timer-display,
+	.timer-section.paused .player-name {
+		opacity: 0.4;
+	}
+
+	.paused-label {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: var(--font-size-timer);
+		font-weight: 700;
+		letter-spacing: 0.15em;
+		color: var(--color-text);
+		pointer-events: none;
 	}
 
 	.player-name {
