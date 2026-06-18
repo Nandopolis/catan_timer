@@ -3,6 +3,7 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { getTurnLog, getGameState, resetGame, initGameState } from '$lib/timer/state.svelte';
+	import { formatTime } from '$lib/timer/engine';
 	import { COLOR_VALUES } from '$lib/db/schema';
 	import type { TurnLogEntry, PlayerColor } from '$lib/db/schema';
 
@@ -59,13 +60,6 @@
 		};
 	});
 
-	function formatDuration(ms: number): string {
-		const seconds = Math.floor(ms / 1000);
-		const mins = Math.floor(seconds / 60);
-		const secs = seconds % 60;
-		return `${mins}:${String(secs).padStart(2, '0')}`;
-	}
-
 	function handleNewGame() {
 		if (confirm('Start new game? Current game will be lost.')) {
 			resetGame();
@@ -103,7 +97,7 @@
 			<h2>Summary</h2>
 			<div class="summary-grid">
 				<div class="summary-item">
-					<span class="summary-value">{formatDuration(stats.totalDuration)}</span>
+					<span class="summary-value">{formatTime(stats.totalDuration)}</span>
 					<span class="summary-label">Total Time</span>
 				</div>
 				<div class="summary-item">
@@ -111,7 +105,7 @@
 					<span class="summary-label">Total Turns</span>
 				</div>
 				<div class="summary-item">
-					<span class="summary-value overtime">+{formatDuration(stats.totalOvertime)}</span>
+					<span class="summary-value overtime">+{formatTime(stats.totalOvertime)}</span>
 					<span class="summary-label">Total Overtime</span>
 				</div>
 				<div class="summary-item">
@@ -147,13 +141,13 @@
 									></span>
 									{ps.player.name}
 								</td>
-								<td>{formatDuration(ps.avgTime)}</td>
+								<td>{formatTime(ps.avgTime)}</td>
 								<td class:overtime={ps.totalOvertime > 0}
-									>+{formatDuration(ps.totalOvertime)}</td
+									>+{formatTime(ps.totalOvertime)}</td
 								>
 								<td>{ps.turnsOverTime}</td>
-								<td>{formatDuration(ps.slowest)}</td>
-								<td>{formatDuration(ps.fastest)}</td>
+								<td>{formatTime(ps.slowest)}</td>
+								<td>{formatTime(ps.fastest)}</td>
 							</tr>
 						{/each}
 					</tbody>
@@ -178,10 +172,10 @@
 										style="background-color: {player ? COLOR_VALUES[player.color] : '#ccc'}"
 									></span>
 									<span class="turn-player">{player?.name ?? 'Unknown'}</span>
-									<span class="turn-duration">{formatDuration(entry.durationMs)}</span>
+									<span class="turn-duration">{formatTime(entry.durationMs)}</span>
 									{#if entry.overtimeMs > 0}
 										<span class="turn-overtime overtime"
-											>+{formatDuration(entry.overtimeMs)}</span
+											>+{formatTime(entry.overtimeMs)}</span
 										>
 									{/if}
 								</li>

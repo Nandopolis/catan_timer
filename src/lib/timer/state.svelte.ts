@@ -29,7 +29,7 @@ const remainingMs = $derived(
 const expired = $derived(remainingMs <= 0);
 const overtimeMs = $derived(expired ? Math.abs(remainingMs) : 0);
 const displayTime = $derived(
-	gameState ? formatTime(expired ? -overtimeMs : remainingMs, expired) : '0:00'
+	gameState ? formatTime(expired ? -overtimeMs : remainingMs) : '0:00'
 );
 const currentPlayer = $derived(
 	gameState ? gameState.players[gameState.currentPlayerIndex] : null

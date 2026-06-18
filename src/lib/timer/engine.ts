@@ -12,19 +12,17 @@ export function getOvertimeMs(state: GameState): number {
 	return isExpired(state) ? Math.abs(getRemainingMs(state)) : 0;
 }
 
-export function formatTime(ms: number, isOvertime: boolean): string {
+export function formatTime(ms: number): string {
 	const absMs = Math.abs(ms);
 	const totalSeconds = Math.floor(absMs / 1000);
 	const hours = Math.floor(totalSeconds / 3600);
 	const minutes = Math.floor((totalSeconds % 3600) / 60);
 	const seconds = totalSeconds % 60;
 
-	const prefix = isOvertime ? '+' : '';
-
 	if (hours > 0) {
-		return `${prefix}${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+		return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 	}
-	return `${prefix}${minutes}:${String(seconds).padStart(2, '0')}`;
+	return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
 export function shouldShowOvertime(state: GameState): boolean {

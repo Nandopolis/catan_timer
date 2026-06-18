@@ -8,13 +8,13 @@
 	const PLAYER_COLORS: PlayerColor[] = ['red', 'blue', 'white', 'green', 'brown', 'yellow'];
 
 	const PRESETS = [
-		{ label: 'Casual', sublabel: '5:00', ms: 5 * 60 * 1000 },
-		{ label: 'Normal', sublabel: '3:00', ms: 3 * 60 * 1000 },
-		{ label: 'Competitive', sublabel: '1:30', ms: 90 * 1000 }
+		{ id: 'casual', label: 'Casual', sublabel: '5:00', ms: 5 * 60 * 1000 },
+		{ id: 'normal', label: 'Normal', sublabel: '3:00', ms: 3 * 60 * 1000 },
+		{ id: 'competitive', label: 'Competitive', sublabel: '1:30', ms: 90 * 1000 }
 	] as const;
 
 	let playerCount = $state(4);
-	let selectedPresetLabel = $state('Normal');
+	let selectedPresetId = $state('normal');
 	let useCustom = $state(false);
 	let customMinutes = $state(3);
 	let customSeconds = $state(0);
@@ -43,12 +43,12 @@
 	}
 
 	function selectPreset(preset: (typeof PRESETS)[number]) {
-		selectedPresetLabel = preset.label;
+		selectedPresetId = preset.id;
 		useCustom = false;
 	}
 
 	function getSelectedPreset() {
-		return PRESETS.find((p) => p.label === selectedPresetLabel) ?? PRESETS[1];
+		return PRESETS.find((p) => p.id === selectedPresetId) ?? PRESETS[1];
 	}
 
 	function handleStart() {
@@ -95,7 +95,7 @@
 			{#each PRESETS as preset}
 				<button
 					class="btn-select"
-					class:active={preset.label === selectedPresetLabel && !useCustom}
+					class:active={preset.id === selectedPresetId && !useCustom}
 					onclick={() => selectPreset(preset)}
 				>
 					<span class="preset-label">{preset.label}</span>

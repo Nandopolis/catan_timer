@@ -81,18 +81,18 @@ describe('getOvertimeMs', () => {
 
 describe('formatTime', () => {
   it('formats countdown as M:SS', () => {
-    expect(formatTime(180000, false)).toBe('3:00');
-    expect(formatTime(45000, false)).toBe('0:45');
-    expect(formatTime(61000, false)).toBe('1:01');
+    expect(formatTime(180000)).toBe('3:00');
+    expect(formatTime(45000)).toBe('0:45');
+    expect(formatTime(61000)).toBe('1:01');
   });
 
-  it('formats overtime as +M:SS', () => {
-    expect(formatTime(-45000, true)).toBe('+0:45');
+  it('formats overtime as M:SS', () => {
+    expect(formatTime(-45000)).toBe('0:45');
   });
 
-  it('formats long overtime as +H:MM:SS', () => {
-    expect(formatTime(-3600000, true)).toBe('+1:00:00');
-    expect(formatTime(-3661000, true)).toBe('+1:01:01');
+  it('formats long overtime as H:MM:SS', () => {
+    expect(formatTime(-3600000)).toBe('1:00:00');
+    expect(formatTime(-3661000)).toBe('1:01:01');
   });
 });
 

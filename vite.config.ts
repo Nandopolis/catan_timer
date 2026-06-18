@@ -1,15 +1,20 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [
+		paraglideVitePlugin({
+			project: './project.inlang',
+			outdir: './src/lib/paraglide'
+		}),
 		sveltekit(),
 		VitePWA({
 			registerType: 'autoUpdate',
 			strategies: 'generateSW',
 			workbox: {
-				globPatterns: ['**/*.{js,css,ico,png,svg,webp,woff,woff2}']
+				globPatterns: ['**/*.{js,css,ico,png,svg,webp,woff,woff2,json}']
 			},
 			manifest: {
 				name: 'Catan Timer',

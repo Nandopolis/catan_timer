@@ -96,7 +96,7 @@
 		class:paused={isPaused}
 		style:color={currentPlayer ? playerColorVar(currentPlayer.color) : 'inherit'}
 	>
-		<div class="timer-display">{displayTime}</div>
+		<div class="timer-display">{isExpired ? '+' : ''}{displayTime}</div>
 		<div class="player-name">{currentPlayer?.name ?? ''}</div>
 		{#if isPaused}
 			<div class="paused-label">PAUSED</div>
