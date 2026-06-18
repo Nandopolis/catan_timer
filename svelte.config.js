@@ -10,6 +10,9 @@ const config = {
 			filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 	},
 	kit: {
+		paths: {
+			base: '/catan_timer'
+		},
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
