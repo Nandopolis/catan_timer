@@ -63,7 +63,11 @@ function pickCritical(state: GameState): CriticalState {
 
 export async function saveGameState(state: GameState): Promise<void> {
 	const db = await getDB();
-	await db.put('gameState', state, GAME_STATE_KEY);
+	// Svelte 5 $state creates deeply-nested Proxy objects that IndexedDB's
+	// structuredClone cannot serialize. Deep-clone via JSON round-trip to
+	// strip all proxies before persisting.
+	const plain: GameState = JSON.parse(JSON.stringify(state));
+	await db.put('gameState', plain, GAME_STATE_KEY);
 	try {
 		localStorage.setItem(LOCALSTORAGE_CRITICAL_KEY, JSON.stringify(pickCritical(state)));
 	} catch {
