@@ -4,14 +4,15 @@
 	import { startNewGame } from '$lib/timer/state.svelte';
 	import { COLOR_VALUES } from '$lib/db/schema';
 	import type { PlayerConfig, PlayerColor } from '$lib/db/schema';
+	import * as m from '$lib/paraglide/messages.js';
 
 	const PLAYER_COLORS: PlayerColor[] = ['red', 'blue', 'white', 'green', 'brown', 'yellow'];
 
 	const PRESETS = [
-		{ id: 'casual', label: 'Casual', sublabel: '5:00', ms: 5 * 60 * 1000 },
-		{ id: 'normal', label: 'Normal', sublabel: '3:00', ms: 3 * 60 * 1000 },
-		{ id: 'competitive', label: 'Competitive', sublabel: '1:30', ms: 90 * 1000 }
-	] as const;
+		{ id: 'casual', label: m['setup.presetCasual'](), sublabel: '5:00', ms: 5 * 60 * 1000 },
+		{ id: 'normal', label: m['setup.presetNormal'](), sublabel: '3:00', ms: 3 * 60 * 1000 },
+		{ id: 'competitive', label: m['setup.presetCompetitive'](), sublabel: '1:30', ms: 90 * 1000 }
+	];
 
 	let playerCount = $state(4);
 	let selectedPresetId = $state('normal');
@@ -54,7 +55,7 @@
 	function handleStart() {
 		const activePlayers = players.slice(0, playerCount).map((p, i) => ({
 			...p,
-			name: p.name.trim() || `Player ${i + 1}`
+			name: p.name.trim() || m['setup.playerDefault']({ playerNumber: i + 1 })
 		}));
 		const durationMs = useCustom
 			? (customMinutes * 60 + customSeconds) * 1000
@@ -70,12 +71,12 @@
 
 <main class="setup">
 	<header class="setup-header">
-		<h1 class="setup-title">Catan Timer</h1>
-		<p class="setup-subtitle">Board Game Turn Timer</p>
+		<h1 class="setup-title">{m['setup.title']()}</h1>
+		<p class="setup-subtitle">{m['setup.subtitle']()}</p>
 	</header>
 
 	<section class="setup-section">
-		<h2 class="section-label">Players</h2>
+		<h2 class="section-label">{m['setup.players']()}</h2>
 		<div class="btn-group">
 			{#each [3, 4, 5, 6] as count}
 				<button
@@ -90,7 +91,7 @@
 	</section>
 
 	<section class="setup-section">
-		<h2 class="section-label">Turn Duration</h2>
+		<h2 class="section-label">{m['setup.turnDuration']()}</h2>
 		<div class="btn-group">
 			{#each PRESETS as preset}
 				<button
@@ -107,15 +108,15 @@
 				class:active={useCustom}
 				onclick={() => (useCustom = true)}
 			>
-				<span class="preset-label">Custom</span>
-				<span class="preset-time">{useCustom ? formatCustomDisplay() : '...'}</span>
+				<span class="preset-label">{m['setup.presetCustom']()}</span>
+				<span class="preset-time">{useCustom ? formatCustomDisplay() : m['setup.customPlaceholder']()}</span>
 			</button>
 		</div>
 
 		{#if useCustom}
 			<div class="custom-duration">
 				<label class="custom-field">
-					<span class="custom-label">Min</span>
+					<span class="custom-label">{m['setup.customMin']()}</span>
 					<input
 						type="number"
 						bind:value={customMinutes}
@@ -126,7 +127,7 @@
 				</label>
 				<span class="custom-sep">:</span>
 				<label class="custom-field">
-					<span class="custom-label">Sec</span>
+					<span class="custom-label">{m['setup.customSec']()}</span>
 					<input
 						type="number"
 						bind:value={customSeconds}
@@ -140,7 +141,7 @@
 	</section>
 
 	<section class="setup-section">
-		<h2 class="section-label">Player Names</h2>
+		<h2 class="section-label">{m['setup.playerNames']()}</h2>
 		<ul class="player-list">
 			{#each players.slice(0, playerCount) as player, i}
 				<li class="player-row">
@@ -148,13 +149,13 @@
 						class="color-dot"
 						class:color-dot-white={player.color === 'white'}
 						style="background-color: var(--color-player-{player.color})"
-						aria-label="Change color for player {i + 1}"
+						aria-label={m['setup.changeColorForPlayer']({ playerNumber: i + 1 })}
 						onclick={() => cycleColor(i)}
 					></button>
 					<input
 						type="text"
 						class="player-name"
-						placeholder="Player {i + 1}"
+						placeholder={m['setup.playerPlaceholder']({ playerNumber: i + 1 })}
 						bind:value={players[i].name}
 						maxlength={20}
 					/>
@@ -165,7 +166,7 @@
 
 	<div class="setup-actions">
 		<button class="btn-start" onclick={handleStart}>
-			Start Game
+			{m['setup.startGame']()}
 		</button>
 	</div>
 </main>
