@@ -33,6 +33,15 @@ export interface GameState {
 	turnLog: TurnLogEntry[];
 }
 
+export interface SetupPreferences {
+	playerCount: number;
+	selectedPresetId: string;
+	useCustom: boolean;
+	customMinutes: number;
+	customSeconds: number;
+	players: PlayerConfig[];
+}
+
 export const COLOR_VALUES: Record<PlayerColor, string> = {
 	red: '#C0392B',
 	blue: '#2980B9',

@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { startNewGame } from '$lib/timer/state.svelte';
+	import { loadSetupPreferences, saveSetupPreferences } from '$lib/db';
 	import { COLOR_VALUES } from '$lib/db/schema';
-	import type { PlayerConfig, PlayerColor } from '$lib/db/schema';
+	import type { PlayerConfig, PlayerColor, SetupPreferences } from '$lib/db/schema';
 	import * as m from '$lib/paraglide/messages.js';
 	import { getLocale, setLocale } from '$lib/i18n';
 
@@ -28,6 +30,45 @@
 			color: PLAYER_COLORS[i]
 		}))
 	);
+
+	let hydrated = $state(false);
+
+	onMount(async () => {
+		const prefs = await loadSetupPreferences();
+		if (prefs) {
+			playerCount = Math.min(6, Math.max(3, prefs.playerCount));
+			selectedPresetId = prefs.selectedPresetId;
+			useCustom = prefs.useCustom;
+			customMinutes = Math.min(10, Math.max(0, prefs.customMinutes));
+			customSeconds = Math.min(45, Math.max(0, prefs.customSeconds));
+
+			const restored: PlayerConfig[] = [];
+			for (let i = 0; i < 6; i++) {
+				const saved = prefs.players[i];
+				restored.push({
+					index: i,
+					name: saved?.name ?? '',
+					color: saved?.color ?? PLAYER_COLORS[i]
+				});
+			}
+			players = restored;
+		}
+		hydrated = true;
+	});
+
+	$effect(() => {
+		if (!hydrated) return;
+
+		const prefs: SetupPreferences = {
+			playerCount,
+			selectedPresetId,
+			useCustom,
+			customMinutes,
+			customSeconds,
+			players: players.map((p) => ({ index: p.index, name: p.name, color: p.color }))
+		};
+		saveSetupPreferences(prefs);
+	});
 
 	function cycleColor(playerIndex: number) {
 		const currentColor = players[playerIndex].color;

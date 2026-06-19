@@ -1,9 +1,10 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
-import type { GamePhase, GameState, TurnLogEntry } from './schema';
+import type { GamePhase, GameState, SetupPreferences, TurnLogEntry } from './schema';
 
 const DB_NAME = 'catan-timer';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const GAME_STATE_KEY = 'current';
+const SETUP_PREFS_KEY = 'last';
 const LOCALSTORAGE_CRITICAL_KEY = 'catan-timer-critical';
 
 /**
@@ -29,6 +30,10 @@ interface CatanTimerDB extends DBSchema {
 		key: number;
 		value: TurnLogEntry;
 	};
+	setupPreferences: {
+		key: string;
+		value: SetupPreferences;
+	};
 }
 
 let dbPromise: Promise<IDBPDatabase<CatanTimerDB>> | null = null;
@@ -36,14 +41,17 @@ let dbPromise: Promise<IDBPDatabase<CatanTimerDB>> | null = null;
 function getDB(): Promise<IDBPDatabase<CatanTimerDB>> {
 	if (!dbPromise) {
 		dbPromise = openDB<CatanTimerDB>(DB_NAME, DB_VERSION, {
-			upgrade(db) {
-				if (!db.objectStoreNames.contains('gameState')) {
-					db.createObjectStore('gameState');
-				}
-				if (!db.objectStoreNames.contains('turnLog')) {
-					db.createObjectStore('turnLog', { autoIncrement: true });
-				}
+		upgrade(db, oldVersion) {
+			if (!db.objectStoreNames.contains('gameState')) {
+				db.createObjectStore('gameState');
 			}
+			if (!db.objectStoreNames.contains('turnLog')) {
+				db.createObjectStore('turnLog', { autoIncrement: true });
+			}
+			if (oldVersion < 2 && !db.objectStoreNames.contains('setupPreferences')) {
+				db.createObjectStore('setupPreferences');
+			}
+		}
 		});
 	}
 	return dbPromise;
@@ -79,6 +87,17 @@ export async function loadGameState(): Promise<GameState | null> {
 	const db = await getDB();
 	const state = await db.get('gameState', GAME_STATE_KEY);
 	return state ?? null;
+}
+
+export async function saveSetupPreferences(prefs: SetupPreferences): Promise<void> {
+	const db = await getDB();
+	const plain: SetupPreferences = JSON.parse(JSON.stringify(prefs));
+	await db.put('setupPreferences', plain, SETUP_PREFS_KEY);
+}
+
+export async function loadSetupPreferences(): Promise<SetupPreferences | null> {
+	const db = await getDB();
+	return (await db.get('setupPreferences', SETUP_PREFS_KEY)) ?? null;
 }
 
 export async function saveTurnLogEntry(entry: TurnLogEntry): Promise<number> {
