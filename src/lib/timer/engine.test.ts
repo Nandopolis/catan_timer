@@ -15,9 +15,9 @@ function createState(overrides: Partial<GameState> = {}): GameState {
   return {
     phase: 'countdown',
     players: [
-      { index: 0, name: 'Alice', color: 'red' },
-      { index: 1, name: 'Bob', color: 'blue' },
-      { index: 2, name: 'Charlie', color: 'green' }
+      { name: 'Alice', color: 'red' },
+      { name: 'Bob', color: 'blue' },
+      { name: 'Charlie', color: 'green' }
     ],
     durationMs: 180000,
     currentPlayerIndex: 0,
@@ -159,7 +159,7 @@ describe('pauseGame / resumeGame', () => {
 describe('startGame', () => {
   it('creates valid initial state', () => {
     const players: PlayerConfig[] = [
-      { index: 0, name: 'A', color: 'red' }
+      { name: 'A', color: 'red' }
     ];
     perfNow = 1000;
     const state = startGame(players, 120000);

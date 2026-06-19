@@ -25,7 +25,6 @@
 
 	let players = $state<PlayerConfig[]>(
 		Array.from({ length: 6 }, (_, i) => ({
-			index: i,
 			name: '',
 			color: PLAYER_COLORS[i]
 		}))
@@ -46,7 +45,6 @@
 			for (let i = 0; i < 6; i++) {
 				const saved = prefs.players[i];
 				restored.push({
-					index: i,
 					name: saved?.name ?? '',
 					color: saved?.color ?? PLAYER_COLORS[i]
 				});
@@ -65,10 +63,24 @@
 			useCustom,
 			customMinutes,
 			customSeconds,
-			players: players.map((p) => ({ index: p.index, name: p.name, color: p.color }))
+			players: players.map((p) => ({ name: p.name, color: p.color }))
 		};
 		saveSetupPreferences(prefs);
 	});
+
+	function movePlayerUp(idx: number) {
+		if (idx <= 0) return;
+		const next = [...players];
+		[next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
+		players = next;
+	}
+
+	function movePlayerDown(idx: number) {
+		if (idx >= playerCount - 1) return;
+		const next = [...players];
+		[next[idx], next[idx + 1]] = [next[idx + 1], next[idx]];
+		players = next;
+	}
 
 	function cycleColor(playerIndex: number) {
 		const currentColor = players[playerIndex].color;
@@ -218,6 +230,30 @@
 						bind:value={players[i].name}
 						maxlength={20}
 					/>
+					<div class="reorder-btns">
+						<button
+							class="reorder-btn"
+							disabled={i === 0}
+							onclick={() => movePlayerUp(i)}
+							aria-label={m['setup.moveUp']({ playerNumber: i + 1 })}
+							type="button"
+						>
+							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<polyline points="18 15 12 9 6 15" />
+							</svg>
+						</button>
+						<button
+							class="reorder-btn"
+							disabled={i === playerCount - 1}
+							onclick={() => movePlayerDown(i)}
+							aria-label={m['setup.moveDown']({ playerNumber: i + 1 })}
+							type="button"
+						>
+							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<polyline points="6 9 12 15 18 9" />
+							</svg>
+						</button>
+					</div>
 				</li>
 			{/each}
 		</ul>
@@ -448,6 +484,37 @@
 
 	.player-name {
 		flex: 1;
+	}
+
+	.reorder-btns {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.reorder-btn {
+		background-color: var(--color-surface);
+		color: var(--color-muted);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: 2px;
+		min-height: 20px;
+		min-width: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: background-color 0.15s ease, color 0.15s ease;
+	}
+
+	.reorder-btn:hover:not(:disabled) {
+		background-color: var(--color-surface-raised);
+		color: var(--color-text);
+	}
+
+	.reorder-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
 	}
 
 	/* Start button */

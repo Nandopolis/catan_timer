@@ -1,7 +1,6 @@
 export type PlayerColor = 'red' | 'blue' | 'white' | 'green' | 'brown' | 'yellow';
 
 export interface PlayerConfig {
-	index: number;
 	name: string;
 	color: PlayerColor;
 }
