@@ -132,14 +132,20 @@
 	<div class="language-switcher">
 		<button
 			class:active={getLocale() === 'en'}
-			onclick={() => setLocale('en')}
+			onclick={() => {
+				setLocale('en');
+				window.location.reload();
+			}}
 			type="button"
 		>
 			EN
 		</button>
 		<button
 			class:active={getLocale() === 'es'}
-			onclick={() => setLocale('es')}
+			onclick={() => {
+				setLocale('es');
+				window.location.reload();
+			}}
 			type="button"
 		>
 			ES
