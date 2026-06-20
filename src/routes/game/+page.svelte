@@ -9,9 +9,11 @@
 		getCurrentRound,
 		getIsPaused,
 		getIsExpired,
+		getIsHandoff,
 		pause,
 		resume,
 		endTurn,
+		startTurn,
 		endCurrentGame,
 		resetGame,
 		initGameState
@@ -27,9 +29,45 @@
 	let currentRound = $derived(getCurrentRound());
 	let isPaused = $derived(getIsPaused());
 	let isExpired = $derived(getIsExpired());
+	let isHandoff = $derived(getIsHandoff());
 
 	let pulseActive = $state(false);
 	let prevExpired = $state(false);
+
+	let handoffMessageIndex = $state(0);
+
+	const HANDOFF_MESSAGES = [
+		() => m['game.handoffDice']({ playerName: currentPlayer?.name ?? '' }),
+		() => m['game.handoffSnacks'](),
+		() => m['game.handoffRNG'](),
+		() => m['game.handoffContemplating']({ playerName: currentPlayer?.name ?? '' }),
+		() => m['game.handoffShuffling'](),
+		() => m['game.handoffRobber'](),
+		() => m['game.handoffTrading'](),
+		() => m['game.handoffRoad'](),
+		() => m['game.handoffRulebook'](),
+		() => m['game.handoffVP']()
+	];
+
+	function nextRandomMessageIndex(current: number): number {
+		if (HANDOFF_MESSAGES.length <= 1) return 0;
+		let next: number;
+		do {
+			next = Math.floor(Math.random() * HANDOFF_MESSAGES.length);
+		} while (next === current);
+		return next;
+	}
+
+	$effect(() => {
+		if (!isHandoff) {
+			handoffMessageIndex = 0;
+			return;
+		}
+		const interval = setInterval(() => {
+			handoffMessageIndex = nextRandomMessageIndex(handoffMessageIndex);
+		}, 5000);
+		return () => clearInterval(interval);
+	});
 
 	onMount(() => {
 		initGameState();
@@ -51,6 +89,15 @@
 		if (endTurnDisabled || !gameState) return;
 		endTurnDisabled = true;
 		await endTurn();
+		setTimeout(() => {
+			endTurnDisabled = false;
+		}, 300);
+	}
+
+	async function handleStartTurn() {
+		if (endTurnDisabled || !gameState) return;
+		endTurnDisabled = true;
+		await startTurn();
 		setTimeout(() => {
 			endTurnDisabled = false;
 		}, 300);
@@ -104,12 +151,19 @@
 		class:overtime={isExpired}
 		class:overtime-pulse={pulseActive}
 		class:paused={isPaused}
+		class:handoff={isHandoff}
 		style:color={currentPlayer ? playerColorVar(currentPlayer.color) : 'inherit'}
 	>
 		<div class="timer-display">{isExpired ? m['common.overtimePrefix']() : ''}{displayTime}</div>
 		<div class="player-name">{currentPlayer?.name ?? ''}</div>
 		{#if isPaused}
 			<div class="paused-label">{m['game.paused']()}</div>
+		{/if}
+		{#if isHandoff}
+			<div class="handoff-overlay">
+				<div class="spinner"></div>
+				<div class="handoff-message">{HANDOFF_MESSAGES[handoffMessageIndex]()}</div>
+			</div>
 		{/if}
 	</section>
 
@@ -129,19 +183,33 @@
 	</section>
 
 	<section class="controls-section">
-		<button
-			class="btn-end-turn"
-			onclick={handleEndTurn}
-			disabled={endTurnDisabled || isPaused}
-			style:background-color={currentPlayer ? COLOR_VALUES[currentPlayer.color] : 'var(--color-accent)'}
-			style:color={currentPlayer ? endTurnTextColor(currentPlayer.color) : '#1A1A2E'}
-		>
-			{m['game.endTurn']()}
-		</button>
-		<div class="controls-row">
-			<button class="btn-pause" onclick={() => (isPaused ? resume() : pause())}>
-				{isPaused ? m['game.resume']() : m['game.pause']()}
+		{#if isHandoff}
+			<button
+				class="btn-end-turn"
+				onclick={handleStartTurn}
+				disabled={endTurnDisabled}
+				style:background-color={currentPlayer ? COLOR_VALUES[currentPlayer.color] : 'var(--color-accent)'}
+				style:color={currentPlayer ? endTurnTextColor(currentPlayer.color) : '#1A1A2E'}
+			>
+				{m['game.startTurn']()}
 			</button>
+		{:else}
+			<button
+				class="btn-end-turn"
+				onclick={handleEndTurn}
+				disabled={endTurnDisabled || isPaused}
+				style:background-color={currentPlayer ? COLOR_VALUES[currentPlayer.color] : 'var(--color-accent)'}
+				style:color={currentPlayer ? endTurnTextColor(currentPlayer.color) : '#1A1A2E'}
+			>
+				{m['game.endTurn']()}
+			</button>
+		{/if}
+		<div class="controls-row">
+			{#if !isHandoff}
+				<button class="btn-pause" onclick={() => (isPaused ? resume() : pause())}>
+					{isPaused ? m['game.resume']() : m['game.pause']()}
+				</button>
+			{/if}
 			<button class="btn-end-game" onclick={handleEndGame}>{m['game.endGame']()}</button>
 			<button class="btn-new-game" onclick={handleNewGame}>{m['game.newGame']()}</button>
 		</div>
@@ -211,7 +279,9 @@
 	}
 
 	.timer-section.paused .timer-display,
-	.timer-section.paused .player-name {
+	.timer-section.paused .player-name,
+	.timer-section.handoff .timer-display,
+	.timer-section.handoff .player-name {
 		opacity: 0.4;
 	}
 
@@ -227,6 +297,50 @@
 		color: var(--color-text);
 		text-transform: uppercase;
 		pointer-events: none;
+		background-color: rgba(26, 26, 46, 0.6);
+		backdrop-filter: blur(2px);
+		border-radius: var(--radius-lg);
+	}
+
+	.handoff-overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-md);
+		background-color: rgba(26, 26, 46, 0.6);
+		backdrop-filter: blur(2px);
+		border-radius: var(--radius-lg);
+	}
+
+	.spinner {
+		width: 48px;
+		height: 48px;
+		border: 4px solid var(--color-surface);
+		border-top-color: var(--color-accent);
+		border-radius: var(--radius-full);
+		animation: spin 1s linear infinite;
+	}
+
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	.handoff-message {
+		font-size: var(--font-size-body);
+		font-weight: 600;
+		color: var(--color-text);
+		text-align: center;
+		padding: 0 var(--space-md);
+		max-width: 80%;
+		min-height: 3em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.player-name {

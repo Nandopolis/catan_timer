@@ -17,7 +17,7 @@ export interface TurnLogEntry {
 	metadata: Record<string, unknown>; // extensible for future VP tracking
 }
 
-export type GamePhase = 'setup' | 'countdown' | 'overtime' | 'paused' | 'game_over';
+export type GamePhase = 'setup' | 'countdown' | 'overtime' | 'paused' | 'handoff' | 'game_over';
 
 export interface GameState {
 	phase: GamePhase;

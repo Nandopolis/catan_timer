@@ -36,6 +36,7 @@ const currentPlayer = $derived(
 );
 const currentRound = $derived(gameState?.round ?? 0);
 const isPaused = $derived(gameState?.phase === 'paused');
+const isHandoff = $derived(gameState?.phase === 'handoff');
 
 // Timer loop management
 let stopTimerLoop: (() => void) | null = null;
@@ -45,7 +46,7 @@ function startTimerLoopInternal() {
 
 	let rafId: number;
 	const tick = () => {
-		if (gameState && gameState.phase !== 'paused' && gameState.phase !== 'game_over') {
+		if (gameState && gameState.phase !== 'paused' && gameState.phase !== 'handoff' && gameState.phase !== 'game_over') {
 			currentTime = performance.now();
 
 			const remaining = gameState.durationMs - (currentTime - gameState.turnStartTimestamp) + gameState.pausedDurationMs;
@@ -131,10 +132,23 @@ export async function endTurn() {
 	};
 
 	gameState = advanceTurn(gameState);
-	gameState = { ...gameState, turnLog: [...gameState.turnLog, entry] };
+	gameState = { ...gameState, phase: 'handoff' as const, turnLog: [...gameState.turnLog, entry] };
 	alarmTriggered = false;
 	await saveGameState(gameState);
 	await saveTurnLogEntry(entry);
+}
+
+export async function startTurn() {
+	if (!gameState || gameState.phase !== 'handoff') return;
+
+	gameState = {
+		...gameState,
+		turnStartTimestamp: performance.now(),
+		turnStartWallClock: Date.now(),
+		phase: 'countdown' as const
+	};
+	alarmTriggered = false;
+	await saveGameState(gameState);
 }
 
 export async function pause() {
@@ -180,6 +194,9 @@ export function getCurrentRound() {
 }
 export function getIsPaused() {
 	return isPaused;
+}
+export function getIsHandoff() {
+	return isHandoff;
 }
 export function getIsExpired() {
 	return expired;
